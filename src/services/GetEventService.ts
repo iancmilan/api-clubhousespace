@@ -3,7 +3,8 @@ import axios from 'axios';
 import getUrls from 'get-urls';
 
 interface Event {
-  eventDate: string;
+  eventWeekDay: string;
+  eventMonthDay: string;
   eventName: string;
   eventClub: string;
   eventGuestsImg: string[];
@@ -18,43 +19,47 @@ class GetEventService {
     const $ = cheerio.load(data);
     const eventGuestsImg: string[] = [];
 
-    const eventDate = $('div.text-gray-600.text-md').text();
-
-    const eventName = $(
-      'div.max-w-md.px-2.mt-6.text-base.text-gray-700 > div.mt-1.text-xl.font-semibold.text-black',
+    const eventWeekDay = $(
+      'div.flex.text-md.font-semibold.text-black.opacity-50 > div.uppercase',
     ).text();
+
+    const eventMonthDay = $(
+      'div.flex.text-md.font-semibold.text-black.opacity-50 > div.ml-1',
+    ).text();
+
+    const eventName = $('div.truncate.text-lg.font-semibold').text();
 
     const eventClub = $(
-      'div.flex.items-center.justify-center.mt-1.text-xs.font-semibold.text-black > span',
+      'div.flex.items-center.text-xs.font-semibold > div.ml-1.uppercase.tracking-widest',
     ).text();
 
-    $('div.mt-4 > div.flex.items-center.justify-center > div.mx-1 > div').each(
-      (i, e) => {
-        const attrReturn = $(e).attr('style');
-        if (attrReturn) {
-          const url = getUrls(attrReturn);
-          url.forEach(element => {
-            eventGuestsImg.push(element);
-          });
-        }
-      },
-    );
+    $('div.flex.mt-2.-ml-1 > div.px-1 > div').each((i, e) => {
+      const attrReturn = $(e).attr('style');
+      if (attrReturn) {
+        const url = getUrls(attrReturn);
+        url.forEach(element => {
+          eventGuestsImg.push(element);
+        });
+      }
+    });
 
-    const eventGuestsNames = $(
-      'div.px-6.mt-2.italic.font-light.text-black.text-md',
-    ).text();
+    const eventGuestsNames = $('div.text-sm.font-thin.mt-2 > em').text();
 
-    const eventDescription = $(
-      'div.max-w-md.px-2.mt-6.text-base.text-gray-700 > div.mt-6',
-    ).text();
+    const eventDescription = $('div.text-sm.font-thin.mt-2')
+      .children()
+      .remove()
+      .end()
+      .text()
+      .replace(/(\r\n|\n|\r)/gm, '');
 
     return {
-      eventDate: eventDate.trim().replace(/(\r\n|\n|\r)/gm, ''),
-      eventName: eventName.trim(),
-      eventClub: eventClub.trim().replace(/(\r\n|\n|\r)/gm, ''),
+      eventWeekDay,
+      eventMonthDay,
+      eventName,
+      eventClub,
       eventGuestsImg,
-      eventGuestsNames: eventGuestsNames.trim(),
-      eventDescription: eventDescription.trim(),
+      eventGuestsNames,
+      eventDescription,
     };
   }
 }
