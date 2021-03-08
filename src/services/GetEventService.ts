@@ -27,7 +27,9 @@ class GetEventService {
       'div.flex.text-md.font-semibold.text-black.opacity-50 > div.ml-1',
     ).text();
 
-    const eventName = $('div.truncate.text-lg.font-semibold').text();
+    const eventName = $(
+      'div.w-full.flex.flex-col.items-start.justify-start > div.text-lg.font-semibold',
+    ).text();
 
     const eventClub = $(
       'div.flex.items-center.text-xs.font-semibold > div.ml-1.uppercase.tracking-widest',
