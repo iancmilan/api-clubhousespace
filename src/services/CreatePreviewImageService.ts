@@ -1,11 +1,26 @@
 import nodeHtmlToImage from 'node-html-to-image';
+import GetEventService from './GetEventService';
 
 class createPreviewImageService {
   public async execute(
     eventId: string,
   ): Promise<string | Buffer | (string | Buffer)[]> {
+    const getEvent = new GetEventService();
+    const {
+      eventClub,
+      eventDescription,
+      eventGuestsImg,
+      eventGuestsNames,
+      eventMonthDay,
+      eventName,
+      eventWeekDay,
+    } = await getEvent.execute(eventId);
+
+    const eventDay = `${eventWeekDay} ${eventMonthDay}`;
+
     const image = await nodeHtmlToImage({
-      html: `<html>
+      html:
+        `<html>
 
       <head>
         <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -113,12 +128,31 @@ class createPreviewImageService {
           <div class="event__Container-sc-9bovm9-0 bjVfMB">
             <div class="event__Card-sc-9bovm9-1 jsPUBv">
               <header class="event__CardHeader-sc-9bovm9-2 bRGeGn">
-                <p>Sun, Jan 31, 10 PM (PST)</p><strong>⏰ Elon Musk on Good Time teste</strong>
-                <div><span>From Good Time</span><img src="/icon_house.svg"></div>
-              </header>
-              <div class="event__Guests-sc-9bovm9-3 cuhfsm"><img src="https://clubhouseprod.s3.amazonaws.com/616_3bc1048a-806b-4d1b-aba7-c604bd522e56_thumbnail_250x250" style="width: 3.4rem; height: 3.4rem;"><img src="https://clubhouseprod.s3.amazonaws.com/977_4887016f-d774-472d-9f40-091b134a89aa_thumbnail_250x250" style="width: 3.4rem; height: 3.4rem;"><img src="https://clubhouseprod.s3.amazonaws.com/2769_7ba253ce-49ee-41e1-af15-e6bad1d2ccad_thumbnail_250x250" style="width: 3.4rem; height: 3.4rem;"><img src="https://clubhouseprod.s3.amazonaws.com/4493_cc85f9fb-1ee7-4cc8-bb43-ec28734abbdb_thumbnail_250x250" style="width: 3.4rem; height: 3.4rem;"><img src="https://clubhouseprod.s3.amazonaws.com/4602198_753c7ae2-952b-405e-97d2-964c9633eabc_thumbnail_250x250" style="width: 3.4rem; height: 3.4rem;"><img src="https://clubhouseprod.s3.amazonaws.com/311_1b52ac11-13b4-42d0-a892-e9b8701b5543_thumbnail_250x250" style="width: 3.4rem; height: 3.4rem;"></div>
+                <p>{{eventDay}}</p><strong>{{eventName}}</strong>
+                ` +
+        `${
+          eventClub
+            ? '<div><span>From {{eventClub}}</span><img src="{{iconHouse}}"></div>'
+            : ''
+        }` +
+        `</header>
+              <div class="event__Guests-sc-9bovm9-3 cuhfsm">
+                ` +
+        `${eventGuestsImg
+          .map(
+            img => `<img src="${img}" style="width: 3.4rem; height: 3.4rem;">`,
+          )
+          .join('')}` +
+        `${
+          eventGuestsNames.split(', ').length - eventGuestsImg.length > 0
+            ? `<strong> +${
+                eventGuestsNames.split(', ').length - eventGuestsImg.length
+              }</strong>`
+            : ''
+        }` +
+        `</div>
               <div class="event__Infos-sc-9bovm9-4 kSyihr">
-                <p>w/ Sriram Krishnan, Marc Andreessen, Steven Sinofsky, Aarthi Ramamurthy, Elon Musk, Garry Tan 🍔</p><span>Special episode of Good Time with Elon Musk. </span>
+                <p>{{eventGuestsNames}}</p><span>{{eventDescription}}</span>
               </div>
             </div>
       </body>
@@ -129,6 +163,17 @@ class createPreviewImageService {
           width: 1200,
           height: 628,
         },
+      },
+      content: {
+        iconHouse: 'https://web-clubhousespace.vercel.app/icon_house.svg',
+        eventClub,
+        eventDescription: eventDescription.replace(
+          '                                          —                 ',
+          '',
+        ),
+        eventGuestsNames,
+        eventName,
+        eventDay,
       },
     });
 
