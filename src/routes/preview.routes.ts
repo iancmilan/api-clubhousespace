@@ -3,7 +3,7 @@ import CreatePreviewImageService from '../services/CreatePreviewImageService';
 
 const previewRouter = Router();
 
-previewRouter.get('/:eventId', async (request, response) => {
+previewRouter.get('/:eventId.png', async (request, response) => {
   const { eventId } = request.params;
   const getImgPreview = new CreatePreviewImageService();
 
