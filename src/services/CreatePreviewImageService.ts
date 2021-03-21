@@ -163,6 +163,7 @@ class createPreviewImageService {
           width: 1200,
           height: 628,
         },
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
       },
       content: {
         iconHouse: 'https://web-clubhousespace.vercel.app/icon_house.svg',
