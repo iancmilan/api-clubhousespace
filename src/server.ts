@@ -7,7 +7,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: 'https://web-clubhousespace.vercel.app/',
+    origin: 'https://web-clubhousespace.vercel.app',
   }),
 );
 app.use(express.json());
