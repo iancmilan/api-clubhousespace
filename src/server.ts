@@ -7,7 +7,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: 'https://joinclubhouse.space',
+    origin: 'https://www.joinclubhouse.space',
   }),
 );
 app.use(express.json());
