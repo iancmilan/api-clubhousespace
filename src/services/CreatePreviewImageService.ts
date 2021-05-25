@@ -128,11 +128,11 @@ class createPreviewImageService {
           <div class="event__Container-sc-9bovm9-0 bjVfMB">
             <div class="event__Card-sc-9bovm9-1 jsPUBv">
               <header class="event__CardHeader-sc-9bovm9-2 bRGeGn">
-                <p>{{eventDay}}</p><strong>{{eventName}}</strong>
+                <p>${eventDay}</p><strong>${eventName}</strong>
                 ` +
         `${
           eventClub
-            ? '<div><span>From {{eventClub}}</span><img src="{{iconHouse}}"></div>'
+            ? `<div><span>From ${eventClub}</span><img src="{{iconHouse}}"></div>`
             : ''
         }` +
         `</header>
@@ -152,7 +152,10 @@ class createPreviewImageService {
         }` +
         `</div>
               <div class="event__Infos-sc-9bovm9-4 kSyihr">
-                <p>{{eventGuestsNames}}</p><span>{{eventDescription}}</span>
+                <p>${eventGuestsNames}</p><span>${eventDescription.replace(
+          '                                          —                 ',
+          '',
+        )}</span>
               </div>
             </div>
       </body>
@@ -168,14 +171,6 @@ class createPreviewImageService {
       },
       content: {
         iconHouse: 'https://web-clubhousespace.vercel.app/icon_house.svg',
-        eventClub,
-        eventDescription: eventDescription.replace(
-          '                                          —                 ',
-          '',
-        ),
-        eventGuestsNames,
-        eventName,
-        eventDay,
       },
     });
 
