@@ -147,7 +147,7 @@ class createPreviewImageService {
           eventGuestsNames.split(', ').length - eventGuestsImg.length > 0
             ? `<strong> +${
                 eventGuestsNames.split(', ').length - eventGuestsImg.length
-              }</strong>`
+              } </strong>`
             : ''
         }` +
         `</div>
